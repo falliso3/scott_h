@@ -1,0 +1,9 @@
+{
+  "name": "scott-registration",
+  "version": "1.0.0",
+  "description": "Registration form with MongoDB backend",
+  "main": "api/submit.js",
+  "dependencies": {
+    "mongodb": "^6.8.0"
+  }
+}

@@ -1,0 +1,138 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f4f8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  padding: 2rem 1rem;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 540px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  color: #1a202c;
+  margin-bottom: 0.4rem;
+}
+
+.subtitle {
+  color: #718096;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.35rem;
+}
+
+.req {
+  color: #e53e3e;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+  width: 100%;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  font-size: 1rem;
+  color: #2d3748;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.2);
+}
+
+.hobbies-group {
+  border: 1.5px solid #cbd5e0;
+  border-radius: 8px;
+  padding: 1rem 1rem 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hobbies-group legend {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2d3748;
+  padding: 0 0.25rem;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: #a0aec0;
+  margin-bottom: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+  background: #4299e1;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background: #3182ce;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status.hidden {
+  display: none;
+}
+
+.status.success {
+  background: #c6f6d5;
+  color: #276749;
+}
+
+.status.error {
+  background: #fed7d7;
+  color: #9b2c2c;
+}
