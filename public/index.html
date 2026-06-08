@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h1>Tell Us About Yourself</h1>
+    <p class="subtitle">Fill out the form below and we'll save your info.</p>
+
+    <form id="registrationForm" novalidate>
+      <div class="field">
+        <label for="name">Full Name <span class="req">*</span></label>
+        <input type="text" id="name" name="name" placeholder="Jane Smith" required />
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address <span class="req">*</span></label>
+        <input type="email" id="email" name="email" placeholder="jane@example.com" required />
+      </div>
+
+      <div class="field">
+        <label for="phone">Phone Number <span class="req">*</span></label>
+        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required />
+      </div>
+
+      <div class="field">
+        <label for="address">Home Address <span class="req">*</span></label>
+        <textarea id="address" name="address" placeholder="123 Main St, City, State, ZIP" rows="3" required></textarea>
+      </div>
+
+      <fieldset class="hobbies-group">
+        <legend>Top 5 Hobbies <span class="req">*</span></legend>
+        <p class="hint">Enter up to 5 things you enjoy doing.</p>
+        <div class="field"><input type="text" name="hobby" placeholder="Hobby 1" /></div>
+        <div class="field"><input type="text" name="hobby" placeholder="Hobby 2" /></div>
+        <div class="field"><input type="text" name="hobby" placeholder="Hobby 3" /></div>
+        <div class="field"><input type="text" name="hobby" placeholder="Hobby 4" /></div>
+        <div class="field"><input type="text" name="hobby" placeholder="Hobby 5" /></div>
+      </fieldset>
+
+      <button type="submit" id="submitBtn">Submit</button>
+
+      <div id="statusMsg" class="status hidden"></div>
+    </form>
+  </div>
+
+  <script>
+    // Replace this with your deployed Vercel API URL after deployment
+    const API_URL = 'https://YOUR_VERCEL_APP.vercel.app/api/submit';
+
+    const form = document.getElementById('registrationForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMsg = document.getElementById('statusMsg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const hobbies = [...document.querySelectorAll('input[name="hobby"]')]
+        .map(el => el.value.trim())
+        .filter(Boolean);
+
+      if (hobbies.length === 0) {
+        showStatus('Please enter at least one hobby.', 'error');
+        return;
+      }
+
+      const payload = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+        address: form.address.value.trim(),
+        hobbies,
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.ok) {
+          showStatus('Thank you! Your information has been saved.', 'success');
+          form.reset();
+        } else {
+          const data = await res.json().catch(() => ({}));
+          showStatus(data.error || 'Something went wrong. Please try again.', 'error');
+        }
+      } catch {
+        showStatus('Could not reach the server. Please check your connection.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit';
+      }
+    });
+
+    function showStatus(message, type) {
+      statusMsg.textContent = message;
+      statusMsg.className = `status ${type}`;
+    }
+  </script>
+</body>
+</html>
