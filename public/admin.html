@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Submissions</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .admin-controls {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .admin-controls input {
+      flex: 1;
+      min-width: 160px;
+      border: 1.5px solid #cbd5e0;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 1rem;
+      outline: none;
+    }
+    .admin-controls input:focus {
+      border-color: #4299e1;
+      box-shadow: 0 0 0 3px rgba(66,153,225,0.2);
+    }
+    .btn-secondary {
+      background: #edf2f7;
+      color: #2d3748;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6rem 1.1rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-secondary:hover { background: #e2e8f0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      background: #edf2f7;
+      color: #4a5568;
+      font-weight: 600;
+      border-bottom: 2px solid #cbd5e0;
+    }
+    td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+      color: #2d3748;
+    }
+    tr:hover td { background: #f7fafc; }
+    .hobbies-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .hobby-tag {
+      background: #ebf8ff;
+      color: #2b6cb0;
+      border-radius: 4px;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .empty { text-align: center; color: #a0aec0; padding: 2rem; }
+    .card { max-width: 900px; }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 1.25rem;
+      color: #4299e1;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+    #count { color: #718096; font-size: 0.875rem; margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <a href="index.html" class="back-link">← Back to form</a>
+    <h1>Admin View</h1>
+    <p class="subtitle">Enter your admin key to load submissions.</p>
+
+    <div class="admin-controls">
+      <input type="password" id="keyInput" placeholder="Admin key" />
+      <button class="btn-secondary" id="loadBtn">Load Records</button>
+      <input type="text" id="searchInput" placeholder="Search by name or phone..." style="display:none" />
+    </div>
+
+    <div id="count"></div>
+    <div id="tableContainer"></div>
+  </div>
+
+  <script>
+    const API_URL = 'https://scotth.vercel.app/api/admin';
+
+    let allRecords = [];
+
+    document.getElementById('loadBtn').addEventListener('click', loadRecords);
+    document.getElementById('keyInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') loadRecords();
+    });
+    document.getElementById('searchInput').addEventListener('input', function () {
+      renderTable(this.value.trim().toLowerCase());
+    });
+
+    async function loadRecords() {
+      const key = document.getElementById('keyInput').value.trim();
+      if (!key) return;
+
+      document.getElementById('loadBtn').textContent = 'Loading...';
+
+      try {
+        const res = await fetch(API_URL, {
+          headers: { 'x-admin-key': key },
+        });
+
+        if (res.status === 401) {
+          alert('Incorrect admin key.');
+          return;
+        }
+
+        allRecords = await res.json();
+        document.getElementById('searchInput').style.display = 'block';
+        renderTable('');
+      } catch {
+        alert('Could not reach the server.');
+      } finally {
+        document.getElementById('loadBtn').textContent = 'Reload';
+      }
+    }
+
+    function renderTable(query) {
+      const filtered = query
+        ? allRecords.filter(r =>
+            r.name?.toLowerCase().includes(query) ||
+            r.phone?.toLowerCase().includes(query)
+          )
+        : allRecords;
+
+      document.getElementById('count').textContent =
+        filtered.length === allRecords.length
+          ? `${allRecords.length} submission${allRecords.length !== 1 ? 's' : ''}`
+          : `Showing ${filtered.length} of ${allRecords.length}`;
+
+      if (filtered.length === 0) {
+        document.getElementById('tableContainer').innerHTML =
+          '<p class="empty">No records found.</p>';
+        return;
+      }
+
+      const rows = filtered.map(r => `
+        <tr>
+          <td>${esc(r.name)}</td>
+          <td>${esc(r.phone)}</td>
+          <td><div class="hobbies-list">${(r.hobbies || []).map(h => `<span class="hobby-tag">${esc(h)}</span>`).join('')}</div></td>
+          <td>${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString() : '—'}</td>
+          <td>${r.updatedAt ? new Date(r.updatedAt).toLocaleDateString() : '—'}</td>
+        </tr>`).join('');
+
+      document.getElementById('tableContainer').innerHTML = `
+        <table>
+          <thead><tr><th>Name</th><th>Phone</th><th>Hobbies</th><th>Submitted</th><th>Updated</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`;
+    }
+
+    function esc(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+  </script>
+</body>
+</html>
