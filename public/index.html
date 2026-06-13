@@ -203,9 +203,14 @@
       }
     });
 
+    let statusTimer;
     function showStatus(message, type) {
+      clearTimeout(statusTimer);
       statusMsg.textContent = message;
       statusMsg.className = `status ${type}`;
+      statusTimer = setTimeout(() => {
+        statusMsg.className = 'status hidden';
+      }, 5000);
     }
   </script>
 </body>
