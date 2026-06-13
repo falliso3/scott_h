@@ -39,6 +39,12 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ error: 'Not enough hobbies. You must add five' });
   }
 
+  //Use a set here to ensure the array and set are the same size, ensuring no
+  //duplicate entries
+  if (new Set(hobbies).size !== hobbies.length) {
+    return res.status(400).json({ error: 'No duplicate hobbies are allowed' });
+  }
+
   if(hobbies.length > 5) {
     return res.status(400).json({ error: 'A maximum of 5 hobbies are allowed.' });
   }

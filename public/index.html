@@ -94,7 +94,21 @@
         list.classList.add('open');
       }
 
+      function getSelectedHobbies() {
+        return [...document.querySelectorAll('input[name="hobby"]')]
+          .map(el => el.value)
+          .filter(Boolean);
+      }
+
       function select(hobby) {
+        const others = getSelectedHobbies().filter(h => h !== hidden.value);
+        if (others.includes(hobby)) {
+          text.value = '';
+          hidden.value = '';
+          showStatus('You already selected "' + hobby + '" in another box.', 'error');
+          list.classList.remove('open');
+          return;
+        }
         text.value = hobby;
         hidden.value = hobby;
         list.classList.remove('open');
