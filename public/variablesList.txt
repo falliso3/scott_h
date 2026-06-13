@@ -1,0 +1,154 @@
+THIS IS JUST A PLACE FOR BRAINSTORMING AND TO WRITE STUFF
+DOWN WITHOUT MAKING THE HTML LOOK LIKE CANCER:
+
+    const HOBBIES = [
+      Arts & Crafts: Cooking & Baking
+      Arts & Crafts: Drawing
+      Arts & Crafts: Painting
+      Arts & Crafts: Sewing & Quilting
+      Arts & Crafts: Crafting
+      Arts & Crafts: Woodworking
+      Arts & Crafts: Digital Art
+      Arts & Crafts: Songwriting
+      Arts & Crafts: Pottery
+
+      Games: Board Games
+      Games: Card Games
+      Games: Pen & Paper
+      Games: Video Games
+
+      Media: Music
+      Media: Movies
+      Media: TV Shows
+      Media: Podcasts
+      Media: Sports
+      Media: Social Media
+      Media: Video Games
+      Media: Reading
+
+      Outdoors: Climbing
+      Outdoors: Backpacking
+      Outdoors: Hiking
+      Outdoors: Camping
+      Outdoors: Fishing
+
+      Pets: Dogs
+      Pets: Cats
+      Pets: Fish
+      Pets: Rodents
+      Pets: Birds
+      Pets: Exotic
+
+      Sports: Target Sports
+      Sports: Golf
+      Sports: Football
+      Sports: Baseball/Softball
+      Sports: Basketball
+      Sports: Soccer
+      Sports: Walking/Running
+      Sports: Swimming
+      Sports: Gymnastics
+      Sports: Volleyball
+      Sports: Racket Sports
+      Sports: Motorsports
+      Sports: Cycling
+      Sports: Martial Arts
+      Sports: Wrestling
+      Sports: Lifting
+
+      Technology: Data Visualization
+      Technology: Coding
+      Technology: Hardware
+      Technology: Mechanics/Automotive
+      Technology: 
+      Technology: 
+      Technology: 
+    ];
+
+
+
+
+Strategy video games
+Role playing video games
+Building video games
+Simulator video games
+Horror video games
+Mystery video games
+Online multiplayer video games
+Adventure video games
+Action video games
+
+Horror film/TV
+Scifi film/TV
+Fantasy film/TV
+Mystery film/TV
+Adventure film/TV
+Action film/TV
+Historical film/TV
+Drama film/TV
+Comedy film/TV
+
+Cats
+Dogs
+
+Dancing
+Music festivals
+Concerts
+Volunteering
+Shopping
+Movie theaters
+Museums
+New restaurants
+
+Social media
+Reading
+Theater
+Live sports
+TV Shows
+Podcasts
+
+Rap music
+World music
+Rock music
+Dance music
+Pop music
+Electronic music
+
+DIY
+Computers
+Coding
+Electronics
+
+Camping
+Fishing
+Hiking
+Climbing
+
+Pickleball
+Tennis
+Golf
+Volleyball
+Running
+Martial Arts
+Wrestling
+Soccer
+Baseball
+Basketball
+Football
+
+Video games
+Puzzle games
+Word games
+Card games
+Board games
+
+Writing
+Songwriting
+Carpentry
+Crafting
+Sewing
+Photography
+Painting
+Drawing
+Baking
+Cooking

@@ -136,3 +136,41 @@ button[type="submit"]:disabled {
   background: #fed7d7;
   color: #9b2c2c;
 }
+
+.hobby-wrap {
+  position: relative;
+}
+
+.hobby-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  list-style: none;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.hobby-dropdown.open {
+  display: block;
+}
+
+.hobby-dropdown li {
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #2d3748;
+}
+
+.hobby-dropdown li:hover,
+.hobby-dropdown li.active {
+  background: #ebf8ff;
+  color: #2b6cb0;
+}

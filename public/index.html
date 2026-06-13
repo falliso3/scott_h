@@ -13,7 +13,7 @@
 
     <form id="registrationForm" novalidate>
       <div class="field">
-        <label for="name">Full Name <span class="req">*</span></label>
+        <label for="name">First & Last Name <span class="req">*</span></label>
         <input type="text" id="name" name="name" placeholder="Jane Smith" required />
       </div>
 
@@ -34,12 +34,12 @@
 
       <fieldset class="hobbies-group">
         <legend>Top 5 Hobbies <span class="req">*</span></legend>
-        <p class="hint">Enter up to 5 things you enjoy doing.</p>
-        <div class="field"><input type="text" name="hobby" placeholder="Hobby 1" /></div>
-        <div class="field"><input type="text" name="hobby" placeholder="Hobby 2" /></div>
-        <div class="field"><input type="text" name="hobby" placeholder="Hobby 3" /></div>
-        <div class="field"><input type="text" name="hobby" placeholder="Hobby 4" /></div>
-        <div class="field"><input type="text" name="hobby" placeholder="Hobby 5" /></div>
+        <p class="hint">Type to search and select up to 5 hobbies.</p>
+        <div class="field hobby-wrap"><input type="text" class="hobby-text" placeholder="Hobby 1" autocomplete="off" /><ul class="hobby-dropdown"></ul><input type="hidden" name="hobby" /></div>
+        <div class="field hobby-wrap"><input type="text" class="hobby-text" placeholder="Hobby 2" autocomplete="off" /><ul class="hobby-dropdown"></ul><input type="hidden" name="hobby" /></div>
+        <div class="field hobby-wrap"><input type="text" class="hobby-text" placeholder="Hobby 3" autocomplete="off" /><ul class="hobby-dropdown"></ul><input type="hidden" name="hobby" /></div>
+        <div class="field hobby-wrap"><input type="text" class="hobby-text" placeholder="Hobby 4" autocomplete="off" /><ul class="hobby-dropdown"></ul><input type="hidden" name="hobby" /></div>
+        <div class="field hobby-wrap"><input type="text" class="hobby-text" placeholder="Hobby 5" autocomplete="off" /><ul class="hobby-dropdown"></ul><input type="hidden" name="hobby" /></div>
       </fieldset>
 
       <button type="submit" id="submitBtn">Submit</button>
@@ -51,6 +51,104 @@
   <script>
     const API_URL = 'https://scotth.vercel.app/api/submit';
 
+    const HOBBIES = [
+      'Strategy video games', 'Role playing video games', 'Building video games',
+      'Simulator video games', 'Horror video games', 'Mystery video games',
+      'Online multiplayer video games', 'Adventure video games', 'Action video games',
+      'Horror film/TV', 'Scifi film/TV', 'Fantasy film/TV', 'Mystery film/TV',
+      'Adventure film/TV', 'Action film/TV', 'Historical film/TV', 'Drama film/TV',
+      'Comedy film/TV',
+      'Cats', 'Dogs',
+      'Dancing', 'Music festivals', 'Concerts', 'Volunteering', 'Shopping',
+      'Movie theaters', 'Museums', 'New restaurants',
+      'Social media', 'Reading', 'Theater', 'Live sports', 'TV Shows', 'Podcasts',
+      'Rap music', 'World music', 'Rock music', 'Dance music', 'Pop music', 'Electronic music',
+      'DIY', 'Computers', 'Coding', 'Electronics',
+      'Camping', 'Fishing', 'Hiking', 'Climbing',
+      'Pickleball', 'Tennis', 'Golf', 'Volleyball', 'Running', 'Martial Arts',
+      'Wrestling', 'Soccer', 'Baseball', 'Basketball', 'Football',
+      'Video games', 'Puzzle games', 'Word games', 'Card games', 'Board games',
+      'Writing', 'Songwriting', 'Carpentry', 'Crafting', 'Sewing', 'Photography',
+      'Painting', 'Drawing', 'Baking', 'Cooking',
+    ];
+
+    //Autocomplete setup
+    document.querySelectorAll('.hobby-wrap').forEach(wrap => {
+      const text  = wrap.querySelector('.hobby-text');
+      const list  = wrap.querySelector('.hobby-dropdown');
+      const hidden = wrap.querySelector('input[name="hobby"]');
+      let activeIdx = -1;
+
+      function showOptions(query) {
+        const q = query.toLowerCase();
+        const matches = q ? HOBBIES.filter(h => h.toLowerCase().includes(q)) : [];
+        list.innerHTML = '';
+        activeIdx = -1;
+        if (matches.length === 0) { list.classList.remove('open'); return; }
+        matches.forEach((hobby, i) => {
+          const li = document.createElement('li');
+          li.textContent = hobby;
+          li.addEventListener('mousedown', () => select(hobby));
+          list.appendChild(li);
+        });
+        list.classList.add('open');
+      }
+
+      function select(hobby) {
+        text.value = hobby;
+        hidden.value = hobby;
+        list.classList.remove('open');
+        list.innerHTML = '';
+      }
+
+      function close() {
+        //If the typed text doesn't match a valid hobby, clear it
+        if (!HOBBIES.includes(text.value.trim())) {
+          text.value = '';
+          hidden.value = '';
+        }
+        list.classList.remove('open');
+      }
+
+      text.addEventListener('input', () => {
+        hidden.value = '';
+        showOptions(text.value);
+      });
+
+      text.addEventListener('keydown', e => {
+        const items = list.querySelectorAll('li');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIdx = Math.min(activeIdx + 1, items.length - 1);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIdx = Math.max(activeIdx - 1, 0);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeIdx >= 0 && items[activeIdx]) select(items[activeIdx].textContent);
+          else if (items.length === 1) select(items[0].textContent);
+          return;
+        } else if (e.key === 'Escape') {
+          close(); return;
+        } else { return; }
+        items.forEach((li, i) => li.classList.toggle('active', i === activeIdx));
+        items[activeIdx]?.scrollIntoView({ block: 'nearest' });
+      });
+
+      text.addEventListener('blur', close);
+    });
+
+    // Phone auto-format
+    document.getElementById('phone').addEventListener('input', function () {
+      const digits = this.value.replace(/\D/g, '').slice(0, 10);
+      let formatted = '';
+      if (digits.length > 0) formatted = '(' + digits.slice(0, 3);
+      if (digits.length >= 4) formatted += ')-' + digits.slice(3, 6);
+      if (digits.length >= 7) formatted += '-' + digits.slice(6, 10);
+      this.value = formatted;
+    });
+
+    //Form submission
     const form = document.getElementById('registrationForm');
     const submitBtn = document.getElementById('submitBtn');
     const statusMsg = document.getElementById('statusMsg');
@@ -63,7 +161,7 @@
         .filter(Boolean);
 
       if (hobbies.length === 0) {
-        showStatus('Please enter at least one hobby.', 'error');
+        showStatus('Please select at least one hobby from the list.', 'error');
         return;
       }
 
@@ -88,6 +186,7 @@
         if (res.ok) {
           showStatus('Thank you! Your information has been saved.', 'success');
           form.reset();
+          document.querySelectorAll('.hobby-text').forEach(el => el.value = '');
         } else {
           const data = await res.json().catch(() => ({}));
           showStatus(data.error || 'Something went wrong. Please try again.', 'error');
