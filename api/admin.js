@@ -23,15 +23,50 @@ module.exports = async function handler(req, res) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  try {
-    const database = await getDb();
-    const records = await database
-      .collection('submissions')
-      .find({}, { projection: { _id: 0 } })
-      .sort({ submittedAt: -1 })
-      .toArray();
+  const { type = 'all', value = '' } = req.query;
+  const database = await getDb();
+  const col = database.collection('submissions');
 
-    return res.status(200).json(records);
+  try {
+    let result;
+
+    if (type === 'all') {
+      result = await col.find({}, { projection: { _id: 0 } }).sort({ submittedAt: -1 }).toArray();
+
+    } else if (type === 'by-hobby') {
+      if (!value) return res.status(400).json({ error: 'Provide a hobby to search.' });
+      result = await col
+        .find({ hobbies: { $regex: value, $options: 'i' } }, { projection: { _id: 0 } })
+        .sort({ submittedAt: -1 })
+        .toArray();
+
+    } else if (type === 'by-name') {
+      if (!value) return res.status(400).json({ error: 'Provide a name to search.' });
+      result = await col
+        .find({ name: { $regex: value, $options: 'i' } }, { projection: { _id: 0 } })
+        .sort({ submittedAt: -1 })
+        .toArray();
+
+    } else if (type === 'by-phone') {
+      if (!value) return res.status(400).json({ error: 'Provide a phone number to search.' });
+      result = await col
+        .find({ phone: { $regex: value, $options: 'i' } }, { projection: { _id: 0 } })
+        .sort({ submittedAt: -1 })
+        .toArray();
+
+    } else if (type === 'popular-hobbies') {
+      result = await col.aggregate([
+        { $unwind: '$hobbies' },
+        { $group: { _id: '$hobbies', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $project: { _id: 0, hobby: '$_id', count: 1 } },
+      ]).toArray();
+
+    } else {
+      return res.status(400).json({ error: 'Unknown query type.' });
+    }
+
+    return res.status(200).json(result);
   } catch (err) {
     console.error('Database error:', err);
     return res.status(500).json({ error: 'Failed to fetch records.' });
