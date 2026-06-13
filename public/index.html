@@ -18,18 +18,8 @@
       </div>
 
       <div class="field">
-        <label for="email">Email Address <span class="req">*</span></label>
-        <input type="email" id="email" name="email" placeholder="jane@example.com" required />
-      </div>
-
-      <div class="field">
         <label for="phone">Phone Number <span class="req">*</span></label>
         <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required />
-      </div>
-
-      <div class="field">
-        <label for="address">Home Address <span class="req">*</span></label>
-        <textarea id="address" name="address" placeholder="123 Main St, City, State, ZIP" rows="3" required></textarea>
       </div>
 
       <fieldset class="hobbies-group">
@@ -181,9 +171,7 @@
 
       const payload = {
         name: form.name.value.trim(),
-        email: form.email.value.trim(),
         phone: form.phone.value.trim(),
-        address: form.address.value.trim(),
         hobbies,
       };
 

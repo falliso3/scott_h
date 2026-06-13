@@ -24,15 +24,10 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, phone, address, hobbies } = req.body ?? {};
+  const { name, phone, hobbies } = req.body ?? {};
 
-  if(!name || !email || !phone || !address) {
-    return res.status(400).json({ error: 'Name, email, phone, and address are required.' });
-  }
-
-  //Use basic regex to see if the entered email is valid
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ error: 'Please provide a valid email address.' });
+  if(!name || !phone) {
+    return res.status(400).json({ error: 'Name and phone number are required.' });
   }
 
   if(!Array.isArray(hobbies) || hobbies.length < 5) {
@@ -54,9 +49,9 @@ module.exports = async function handler(req, res) {
     const collection = database.collection('submissions');
 
     const result = await collection.updateOne(
-      { name, email, phone },
+      { name, phone },
       {
-        $set: { address, hobbies, updatedAt: new Date() },
+        $set: { hobbies, updatedAt: new Date() },
         $setOnInsert: { submittedAt: new Date() },
       },
       { upsert: true }
