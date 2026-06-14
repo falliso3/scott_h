@@ -191,6 +191,7 @@
           showStatus('Thank you! Your information has been saved.', 'success');
           form.reset();
           document.querySelectorAll('.hobby-text').forEach(el => el.value = '');
+          document.querySelectorAll('input[name="hobby"]').forEach(el => el.value = '');
         } else {
           const data = await res.json().catch(() => ({}));
           showStatus(data.error || 'Something went wrong. Please try again.', 'error');
